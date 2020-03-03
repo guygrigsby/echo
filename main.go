@@ -12,7 +12,15 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 
 		fmt.Fprintf(w, err.Error())
+		status := http.StatusInternalServerError
+		http.Error(w, http.StatusText(status), status)
+		return
 	}
+	acc := r.Header.Get("Accept")
+	if acc != "" {
+		w.Header().Set("Content-Type", acc)
+	}
+
 	fmt.Fprintf(w, "%s", body)
 }
 
